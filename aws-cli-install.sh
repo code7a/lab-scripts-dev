@@ -9,6 +9,8 @@ cat << EOF > .aws/config
 [default]
 EOF
 cat << EOF > .aws/credentials
+[default]
 aws_access_key_id = $aws_key
 aws_secret_access_key = $aws_secret
 EOF
+chmod 600 .aws/*
