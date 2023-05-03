@@ -2,7 +2,7 @@
 yum install -y zip jq
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip -u awscliv2.zip
-./aws/install
+./aws/install --update
 export PATH=/usr/local/bin/:$PATH
 mkdir .aws
 cat << EOF > .aws/config
