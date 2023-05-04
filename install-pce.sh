@@ -1,5 +1,7 @@
 #install-pce.sh
 #modify to get bin repo script
+yum install -y wget bzip2 net-tools initscripts
+
 cd /
 wget https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/illumio-pce-23.2.0-1346.c8.x86_64.rpm
 wget https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/UI/illumio-pce-ui-23.2.0.UI1-1736.x86_64.rpm
