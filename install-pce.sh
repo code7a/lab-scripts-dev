@@ -1,12 +1,13 @@
 #install-pce.sh
 #modify to get bin repo script
-yum install -y wget bzip2 net-tools initscripts libxcrypt-compat compat-openssl11
+yum install -y wget bzip2 net-tools initscripts libxcrypt-compat compat-openssl11 glibc-langpack-en
+localectl set-locale LANG=en_US.utf8
 
 cd /
-wget https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/illumio-pce-23.2.0-1346.c8.x86_64.rpm
-wget https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/UI/illumio-pce-ui-23.2.0.UI1-1736.x86_64.rpm
-wget https://$repo/23.2/GA%20Releases/23.2.0/compatibility/illumio-release-compatibility-37-270.tar.bz2
-wget https://$repo/23.2/GA%20Releases/23.2.0/ven/bundle/illumio-ven-bundle-23.2.0-129.tar.bz2
+wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/illumio-pce-23.2.0-1346.c8.x86_64.rpm
+wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/UI/illumio-pce-ui-23.2.0.UI1-1736.x86_64.rpm
+wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/compatibility/illumio-release-compatibility-37-270.tar.bz2
+wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/ven/bundle/illumio-ven-bundle-23.2.0-129.tar.bz2
 cd
 rpm -Uvh /illumio-pce-*.rpm
 #mkdir /opt/illumio-pce/ && tar -xf illumio-pce-*.tgz -C /opt/illumio-pce/ && chown -R root:ilo-pce /opt/illumio-pce/
