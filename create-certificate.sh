@@ -45,7 +45,7 @@ cat << EOF >> /etc/rc.local
 sleep 10
 #create certificate
 #if dev, sign with test CAs
-if [[ \$(hostname) != *"hodev"* ]]; then
+if [[ \$(hostname) != *"dev"* ]]; then
     certbot certonly --domain \$(hostname) --manual --preferred-challenges dns --manual-auth-hook /.certbot_authenticator.sh --manual-cleanup-hook /.certbot_cleanup.sh --agree-tos --register-unsafely-without-email --keep-until-expiring --key-type rsa
 else
     certbot certonly --domain \$(hostname) --manual --preferred-challenges dns --manual-auth-hook /.certbot_authenticator.sh --manual-cleanup-hook /.certbot_cleanup.sh --agree-tos --register-unsafely-without-email --keep-until-expiring --key-type rsa --test-cert
