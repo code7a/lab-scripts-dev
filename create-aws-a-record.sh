@@ -1,4 +1,5 @@
 #create-aws-a-record.sh
+yum install -y jq
 cat << EEOF >> /etc/rc.local
 #get zone id from hostname
 aws route53 list-hosted-zones | jq -r .HostedZones[].Id | cut -d/ -f3 > /.hostedzone

@@ -55,3 +55,5 @@ certbot_result=\$(echo \$?)
 echo \$certbot_result | grep 0 || sleep 60 && certbot certonly --domain \$(hostname) --manual --preferred-challenges dns --manual-auth-hook /.certbot_authenticator.sh --manual-cleanup-hook /.certbot_cleanup.sh --agree-tos --register-unsafely-without-email --keep-until-expiring --key-type rsa --test-cert
 EOF
 chmod +x /etc/rc.local
+
+#import lets e certs pub and staging
