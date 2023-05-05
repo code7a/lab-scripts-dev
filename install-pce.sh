@@ -20,14 +20,14 @@ chmod 400 /var/lib/illumio-pce/cert/server.key
 chown ilo-pce:ilo-pce /var/lib/illumio-pce/cert/server.key
 
 /opt/illumio-pce/illumio-pce-env setup --batch node_type='snc0' email_address=$pce_admin_username_email_address pce_fqdn=$(hostname) metrics_collection_enabled=false expose_user_invitation_link=true
-sudo -u ilo-pce /opt/illumio-pce/illumio-pce-ctl start --runlevel 1 #&> /dev/null
+sudo -u ilo-pce /opt/illumio-pce/illumio-pce-ctl start --runlevel 1 &> /dev/null
 sleep 60
 sudo -u ilo-pce /opt/illumio-pce/illumio-pce-ctl status -w
 sleep 10
 sudo -u ilo-pce /opt/illumio-pce/illumio-pce-ctl status -w
 sudo -u ilo-pce /opt/illumio-pce/illumio-pce-db-management setup
 sleep 10
-sudo -u ilo-pce /opt/illumio-pce/illumio-pce-ctl set-runlevel 5 #&> /dev/null
+sudo -u ilo-pce /opt/illumio-pce/illumio-pce-ctl set-runlevel 5 &> /dev/null
 sleep 60
 sudo -u ilo-pce /opt/illumio-pce/illumio-pce-ctl status -w
 sleep 10
