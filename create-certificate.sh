@@ -55,11 +55,3 @@ certbot_result=\$(echo \$?)
 echo \$certbot_result | grep 0 || sleep 60 && certbot certonly --domain \$(hostname) --manual --preferred-challenges dns --manual-auth-hook /.certbot_authenticator.sh --manual-cleanup-hook /.certbot_cleanup.sh --agree-tos --register-unsafely-without-email --keep-until-expiring --key-type rsa --test-cert
 EOF
 chmod +x /etc/rc.local
-
-#import lets encrypt certificates
-curl https://letsencrypt.org/certs/isrgrootx1.pem -o /etc/pki/ca-trust/source/anchors/isrgrootx1.pem
-curl https://letsencrypt.org/certs/lets-encrypt-r3.pem -o /etc/pki/ca-trust/source/anchors/lets-encrypt-r3.pem
-curl https://letsencrypt.org/certs/staging/letsencrypt-stg-int-r3.pem -o /etc/pki/ca-trust/source/anchors/letsencrypt-stg-int-r3.pem
-curl https://letsencrypt.org/certs/staging/letsencrypt-stg-root-x1.pem -o /etc/pki/ca-trust/source/anchors/letsencrypt-stg-root-x1.pem
-curl https://letsencrypt.org/certs/staging/letsencrypt-stg-root-x2.pem -o /etc/pki/ca-trust/source/anchors/letsencrypt-stg-root-x2.pem
-update-ca-trust enable && update-ca-trust extract
