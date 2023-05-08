@@ -36,5 +36,5 @@ sudo -u ilo-pce /opt/illumio-pce/illumio-pce-ctl status -w
 sudo --preserve-env -u ilo-pce ILO_PASSWORD=$pce_admin_password /opt/illumio-pce/illumio-pce-db-management create-domain --user-name $pce_admin_username_email_address --full-name admin --org-name $(hostname)
 #install ven bundle
 sudo -u ilo-pce /opt/illumio-pce/illumio-pce-ctl ven-software-install /illumio-ven-bundle-* --compatibility-matrix /illumio-release-compatibility-* --default --no-prompt --orgs 1
-sleep 10 && systemctl restart sshd &
-pkill sshd &
+#sleep 10 && systemctl restart sshd &
+#pkill sshd &
