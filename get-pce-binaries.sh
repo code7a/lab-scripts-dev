@@ -1,4 +1,5 @@
 #get-pce-binaries.sh
+yum install -y wget
 cd /
 if [[ $pce_version == "23.2.0" ]]; then
     wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/illumio-pce-23.2.0-1346.c8.x86_64.rpm
