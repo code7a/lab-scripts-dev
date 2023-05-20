@@ -11,8 +11,8 @@ curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/pai
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-NGINX"}'
 #create httpd app label
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-HTTPD"}'
-#create lighttpd app label
-curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-LIGHTTPD"}'
+#create cockpit app label
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-COCKPIT"}'
 #create share app label
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-SHARE"}'
 #get service
