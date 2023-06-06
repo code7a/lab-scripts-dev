@@ -1,6 +1,11 @@
 #get-pce-binaries.sh
 yum install -y wget
 cd /
+if [[ $pce_version == "22.5.23" ]]; then
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/pce/pkgs/illumio-pce-22.5.23-2.c8.x86_64.rpm
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/pce/pkgs/UI/illumio-pce-ui-22.5.23.UI1-1.x86_64.rpm
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/compatibility/illumio-release-compatibility-39-280.tar.bz2
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.22/ven/bundle/illumio-ven-bundle-22.5.22-9806.tar.bz2
 if [[ $pce_version == "23.2.0" ]]; then
     wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/illumio-pce-23.2.0-1346.c8.x86_64.rpm
     wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/UI/illumio-pce-ui-23.2.0.UI1-1736.x86_64.rpm
