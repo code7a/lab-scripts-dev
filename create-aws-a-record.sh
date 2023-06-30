@@ -2,7 +2,7 @@
 yum install -y jq
 cat << EEOF >> /etc/rc.local
 #get zone id from hostname
-aws route53 list-hosted-zones | jq -r .HostedZones[].Id | cut -d/ -f3 > /.hostedzone
+aws route53 list-hosted-zones | jq -r '.HostedZones[]|select(.Name=="pslab.click.")|.Id' | cut -d/ -f3 > /.hostedzone
 #create batch file
 cat << EOF > /.create_a_record.json
 {
