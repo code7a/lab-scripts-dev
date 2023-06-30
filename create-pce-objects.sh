@@ -22,4 +22,4 @@ curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec
 #provision
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy -X POST -H 'Content-Type: application/json' --data-raw '{"update_description":"","change_subset":{"enforcement_boundaries":[{"href":"/orgs/1/sec_policy/draft/enforcement_boundaries/1"}]}}'
 #enable ransomware dashboard
-curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/optional_features -X POST -H 'Content-Type: application/json' --data-raw '[{"name":"ransomware_readiness_dashboard","enabled":true}]'
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/optional_features -X PUT -H 'Content-Type: application/json' --data-raw '[{"name":"ransomware_readiness_dashboard","enabled":true}]'
