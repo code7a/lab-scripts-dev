@@ -4,7 +4,7 @@ cd /
 if [[ $pce_version == "23.3.0" ]]; then
     wget --timestamping https://$repo/23.3/GA%20Releases/23.3.0/pce/pkgs/illumio-pce-23.3.0-1483.c8.x86_64.rpm
     wget --timestamping https://$repo/23.3/GA%20Releases/23.3.0/pce/pkgs/UI/illumio-pce-ui-23.3.0.UI1-2009.x86_64.rpm
-    wget --timestamping https://$repo/22.5/GA%20Releases/23.3/GA%20Releases/23.3.0/compatibility/illumio-release-compatibility-40-284.tar.bz2
+    wget --timestamping https://$repo/23.3/GA%20Releases/23.3.0/compatibility/illumio-release-compatibility-40-284.tar.bz2
     wget --timestamping https://$repo/22.5/GA%20Releases/22.5.22/ven/bundle/illumio-ven-bundle-22.5.22-9806.tar.bz2
 elif [[ $pce_version == "22.5.23" ]]; then
     wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/pce/pkgs/illumio-pce-22.5.23-2.c8.x86_64.rpm
