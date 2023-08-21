@@ -6,16 +6,26 @@ if [[ $pce_version == "23.3.0" ]]; then
     wget --timestamping https://$repo/23.3/GA%20Releases/23.3.0/pce/pkgs/UI/illumio-pce-ui-23.3.0.UI1-2009.x86_64.rpm
     wget --timestamping https://$repo/23.3/GA%20Releases/23.3.0/compatibility/illumio-release-compatibility-40-284.tar.bz2
     wget --timestamping https://$repo/22.5/GA%20Releases/22.5.22/ven/bundle/illumio-ven-bundle-22.5.22-9806.tar.bz2
-elif [[ $pce_version == "22.5.23" ]]; then
-    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/pce/pkgs/illumio-pce-22.5.23-2.c8.x86_64.rpm
-    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/pce/pkgs/UI/illumio-pce-ui-22.5.23.UI1-1.x86_64.rpm
-    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/compatibility/illumio-release-compatibility-39-280.tar.bz2
-    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.22/ven/bundle/illumio-ven-bundle-22.5.22-9806.tar.bz2
+elif [[ $pce_version == "23.2.10" ]]; then
+    wget --timestamping https://$repo/23.2/GA%20Releases/23.2.10/pce/pkgs/illumio-pce-23.2.10-94.c8.x86_64.rpm
+    wget --timestamping https://$repo/23.2/GA%20Releases/23.2.10/pce/pkgs/UI/illumio-pce-ui-23.2.10.UI1-143.x86_64.rpm
+    wget --timestamping https://$repo/23.2/GA%20Releases/23.2.10/compatibility/illumio-release-compatibility-42-295.tar.bz2
+    wget --timestamping https://$repo/23.2/GA%20Releases/23.2.10/ven/bundle/illumio-ven-bundle-23.2.10-205.tar.bz2
 elif [[ $pce_version == "23.2.0" ]]; then
     wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/illumio-pce-23.2.0-1346.c8.x86_64.rpm
     wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/pce/pkgs/UI/illumio-pce-ui-23.2.0.UI1-1736.x86_64.rpm
     wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/compatibility/illumio-release-compatibility-37-270.tar.bz2
     wget --timestamping https://$repo/23.2/GA%20Releases/23.2.0/ven/bundle/illumio-ven-bundle-23.2.0-129.tar.bz2
+elif [[ $pce_version == "22.5.30" ]]; then
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.30/pce/pkgs/illumio-pce-22.5.30-181.c8.x86_64.rpm
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.30/pce/pkgs/UI/illumio-pce-ui-22.5.30.UI1-186.x86_64.rpm
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/compatibility/illumio-release-compatibility-39-280.tar.bz2
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.30/ven/bundle/illumio-ven-bundle-22.5.30-9870.tar.bz2
+elif [[ $pce_version == "22.5.23" ]]; then
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/pce/pkgs/illumio-pce-22.5.23-2.c8.x86_64.rpm
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/pce/pkgs/UI/illumio-pce-ui-22.5.23.UI1-1.x86_64.rpm
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.23/compatibility/illumio-release-compatibility-39-280.tar.bz2
+    wget --timestamping https://$repo/22.5/GA%20Releases/22.5.22/ven/bundle/illumio-ven-bundle-22.5.22-9806.tar.bz2
 elif [[ $pce_version == "22.5.20" ]]; then
     wget --timestamping https://$repo/22.5/GA%20Releases/22.5.20/pce/pkgs/illumio-pce-22.5.20-136.c8.x86_64.rpm
     wget --timestamping https://$repo/22.5/GA%20Releases/22.5.20/pce/pkgs/UI/illumio-pce-ui-22.5.20.UI1-166.x86_64.rpm

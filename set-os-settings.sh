@@ -6,7 +6,8 @@ if [[ "$(hostname)" == *"core"* ]]; then
 #if data node
 else
     echo 1 > /proc/sys/vm/overcommit_memory
-    echo 'vm.overcommit_memory=1' >> /etc/sysctl.conf
+    echo 'vm.overcommit_memory=1' > /etc/sysctl.d/100-vm-overcommit-memory.conf
+    sysctl -p
 fi
 grep -qxF 'LimitCORE=0' /etc/systemd/system/illumio-pce.service.d/illumio-pce-limits.conf || echo 'LimitCORE=0' >> /etc/systemd/system/illumio-pce.service.d/illumio-pce-limits.conf
 sysctl -p
