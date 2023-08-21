@@ -20,5 +20,5 @@ while ($vm_ip -eq $null){
     $vm_ip = Get-VM $vm | ForEach-Object{$_.Guest.IPAddress} | Where-Object{$_ -like "*.*"}
     Start-Sleep 10}
 Write-Host "VM started."
-Write-Output $vm_ip > vm_ip.txt
-Write-Output $vm_hostname > vm_hostname.txt
+Write-Output $vm_ip > $($ENV:BUILD_TAG)-vm_ip.txt
+Write-Output $vm_hostname > $($ENV:BUILD_TAG)-vm_hostname.txt
