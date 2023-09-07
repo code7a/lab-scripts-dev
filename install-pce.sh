@@ -31,3 +31,7 @@ sudo --preserve-env -u ilo-pce ILO_PASSWORD=$pce_admin_password /opt/illumio-pce
 sudo -u ilo-pce /opt/illumio-pce/illumio-pce-ctl ven-software-install /illumio-ven-bundle-* --compatibility-matrix /illumio-release-compatibility-* --default --no-prompt --orgs 1
 #sleep 10 && systemctl restart sshd &
 #pkill sshd &
+#install nginx for accessible illumio-values.yaml
+yum install nginx -y
+systemctl enable nginx
+systemctl start nginx
