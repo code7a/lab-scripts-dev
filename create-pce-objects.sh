@@ -55,3 +55,10 @@ env_label_href=$(curl -u $auth_username:$session_token "https://$(hostname):8443
 role_label_href=$(curl -u $auth_username:$session_token "https://$(hostname):8443/api/v2/orgs/1/labels?key=role&value=R-CONTAINER" | jq -r .[].href)
 #update container workload default profile
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles/$container_workload_profiles_default_id -X PUT -H 'content-type: application/json' --data-raw '{"managed":true,"labels":[{"key":"env","assignment":{"href":"'$env_label_href'"}},{"key":"role","assignment":{"href":"'$role_label_href'"}}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary"}'
+#remove flow collections
+traffic_collector_hrefs=($(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/settings/traffic_collector | jq -r .[].href))
+for traffic_collector_href in "${traffic_collector_hrefs[@]}"; do
+ curl -u $auth_username:$session_token https://$(hostname):8443/api/v2$traffic_collector_href -X DELETE
+done
+#enable label_based_network_detection
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/optional_features -X PUT -H 'Content-Type: application/json' --data-raw '[{"name": "label_based_network_detection","enabled": true}]'
