@@ -9,6 +9,7 @@ rpm -Uvh /illumio-pce-*.rpm
 
 echo y|cp /etc/letsencrypt/live/$(hostname)/cert.pem /var/lib/illumio-pce/cert/server.crt
 echo y|cp /etc/letsencrypt/live/$(hostname)/privkey.pem /var/lib/illumio-pce/cert/server.key
+echo y|cp /etc/letsencrypt/live/$(hostname)/fullchain.pem /usr/share/nginx/html/
 chmod 400 /var/lib/illumio-pce/cert/server.key
 chown ilo-pce:ilo-pce /var/lib/illumio-pce/cert/server.key
 

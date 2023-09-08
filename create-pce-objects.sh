@@ -45,6 +45,14 @@ cluster_code: $pce_container_clusters_activation_code
 containerRuntime: k3s_containerd
 containerManager: kubernetes
 ignore_cert: true
+extraVolumeMounts:
+  - name: root-ca
+    mountPath: /etc/pki/tls/ilo_certs/
+    readOnly: false
+extraVolumes:
+  - name: root-ca
+    configMap:
+      name: root-ca-config
 EOF
 #get container default workload profile id
 container_workload_profiles=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles)
