@@ -36,6 +36,8 @@ pairing_profiles_response=$(curl -u $auth_username:$session_token https://$(host
 pairing_profiles_response_href=$(echo $pairing_profiles_response | jq -r .href)
 pairing_key_response=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2$pairing_profiles_response_href/pairing_key -X POST -H 'content-type: application/json' --data-raw '{}')
 pce_container_clusters_activation_code=$(echo $pairing_key_response | jq -r .activation_code)
+#copy certificate to share for containers to pull from
+echo y|cp /etc/letsencrypt/live/$(hostname)/fullchain.pem /usr/share/nginx/html/
 #create containter cluster illumio-values.yaml
 cat << EOF > /usr/share/nginx/html/illumio-values.yaml
 pce_url: $(hostname):8443
