@@ -6,7 +6,7 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 rm -rf /etc/machine-id; systemd-machine-id-setup;
 service k3s restart
 #get illumio-values.yaml
-pce="$(echo $(hostname) | cut -d. -f1).snc.$(echo $(hostname) | cut -d. -f2-4).$(echo $(hostname) | cut -d. -f6-7)"
+pce="$(echo $(hostname) | cut -d. -f1).snc.$(echo $(hostname) | cut -d. -f2-4).$(echo $(hostname) | cut -d. -f6-8)"
 curl $pce/illumio-values.yaml -o illumio-values.yaml
 curl $pce/fullchain.pem -o /fullchain.crt
 #helm install

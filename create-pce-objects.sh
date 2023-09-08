@@ -13,6 +13,8 @@ curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/lab
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-HTTPD"}'
 #create cockpit app label
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-COCKPIT"}'
+#create tomcat app label
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-TOMCAT"}'
 #create k3s app label
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-K3S"}'
 #create container role label
