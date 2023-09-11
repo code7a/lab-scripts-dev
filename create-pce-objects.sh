@@ -29,12 +29,16 @@ curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy -X POST -H 'Content-Type: application/json' --data-raw '{"update_description":"","change_subset":{"enforcement_boundaries":[{"href":"/orgs/1/sec_policy/draft/enforcement_boundaries/1"}]}}'
 #enable ransomware dashboard
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/optional_features -X PUT -H 'Content-Type: application/json' --data-raw '[{"name":"ransomware_readiness_dashboard","enabled":true}]'
+#get dev label href
+dev_label_href=$(curl -u $auth_username:$session_token "https://$(hostname):8443/api/v2/orgs/1/labels?key=env&value=Development" | jq -r .[].href)
+#get k3s label href
+k3s_label_href=$(curl -u $auth_username:$session_token "https://$(hostname):8443/api/v2/orgs/1/labels?key=app&value=A-K3S" | jq -r .[].href)
 #create containter cluster
 container_clusters_response=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters -X POST -H 'content-type: application/json' --data-raw '{"name":"k3s","description":""}')
 pce_container_clusters_cluster_id=$(echo $container_clusters_response | jq -r .href | cut -d/ -f5)
 pce_container_clusters_cluster_token=$(echo $container_clusters_response | jq -r .container_cluster_token)
 #create container pairing profile
-pairing_profiles_response=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/pairing_profiles -X POST -H 'content-type: application/json' --data-raw '{"name":"pp-container_nodes","description":"","labels":[{"href":"/orgs/1/labels/17"},{"href":"/orgs/1/labels/9"}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary","allowed_uses_per_key":"unlimited","agent_software_release":null,"key_lifespan":"unlimited","app_label_lock":true,"env_label_lock":true,"loc_label_lock":true,"role_label_lock":true,"enforcement_mode_lock":true,"visibility_level_lock":true,"enabled":true,"ven_type":"server"}')
+pairing_profiles_response=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/pairing_profiles -X POST -H 'content-type: application/json' --data-raw '{"name":"pp-container_nodes","description":"","labels":[{"href":"'$k3s_label_href'"},{"href":"'$dev_label_href'"}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary","allowed_uses_per_key":"unlimited","agent_software_release":null,"key_lifespan":"unlimited","app_label_lock":true,"env_label_lock":true,"loc_label_lock":true,"role_label_lock":true,"enforcement_mode_lock":true,"visibility_level_lock":true,"enabled":true,"ven_type":"server"}')
 pairing_profiles_response_href=$(echo $pairing_profiles_response | jq -r .href)
 pairing_key_response=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2$pairing_profiles_response_href/pairing_key -X POST -H 'content-type: application/json' --data-raw '{}')
 pce_container_clusters_activation_code=$(echo $pairing_key_response | jq -r .activation_code)
@@ -61,12 +65,10 @@ EOF
 #get container default workload profile id
 container_workload_profiles=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles)
 container_workload_profiles_default_id=$(echo $container_workload_profiles | jq -r .[].href | cut -d/ -f7)
-#get dev label href
-env_label_href=$(curl -u $auth_username:$session_token "https://$(hostname):8443/api/v2/orgs/1/labels?key=env&value=Development" | jq -r .[].href)
 #get container label href
 role_label_href=$(curl -u $auth_username:$session_token "https://$(hostname):8443/api/v2/orgs/1/labels?key=role&value=R-CONTAINER" | jq -r .[].href)
 #update container workload default profile
-curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles/$container_workload_profiles_default_id -X PUT -H 'content-type: application/json' --data-raw '{"managed":true,"labels":[{"key":"env","assignment":{"href":"'$env_label_href'"}},{"key":"role","assignment":{"href":"'$role_label_href'"}}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary"}'
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles/$container_workload_profiles_default_id -X PUT -H 'content-type: application/json' --data-raw '{"managed":true,"labels":[{"key":"env","assignment":{"href":"'$dev_label_href'"}},{"key":"role","assignment":{"href":"'$role_label_href'"}}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary"}'
 #remove flow collections
 traffic_collector_hrefs=($(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/settings/traffic_collector | jq -r .[].href))
 for traffic_collector_href in "${traffic_collector_hrefs[@]}"; do
