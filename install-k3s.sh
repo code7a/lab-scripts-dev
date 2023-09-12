@@ -10,7 +10,7 @@ pce="$(echo $(hostname) | cut -d. -f1).snc.$(echo $(hostname) | cut -d. -f2-4).$
 curl $pce/illumio-values.yaml -o illumio-values.yaml
 #append chain to ca bundle
 curl $pce/chain.pem -o /chain.crt
-cat /chain.crt >> /etc/pki/tls/certs/ca-bundle.crt
+cp /chain.crt /etc/pki/ca-trust/source/anchors/
 update-ca-trust enable && update-ca-trust extract
 #helm install
 kubectl create ns illumio-system
