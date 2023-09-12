@@ -5,6 +5,8 @@ Invoke-WebRequest https://letsencrypt.org/certs/lets-encrypt-r3.pem -o lets-encr
 Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root\ .\lets-encrypt-r3.pem
 Invoke-WebRequest https://letsencrypt.org/certs/staging/letsencrypt-stg-int-r3.pem -o letsencrypt-stg-int-r3.pem
 Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root\ .\letsencrypt-stg-int-r3.pem
+Invoke-WebRequest https://letsencrypt.org/certs/staging/letsencrypt-stg-int-e1.pem -o letsencrypt-stg-int-e1.pem
+Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root\ .\letsencrypt-stg-int-e1.pem
 Invoke-WebRequest https://letsencrypt.org/certs/staging/letsencrypt-stg-root-x1.pem -o letsencrypt-stg-root-x1.pem
 Import-Certificate -CertStoreLocation Cert:\LocalMachine\Root\ .\letsencrypt-stg-root-x1.pem
 Invoke-WebRequest https://letsencrypt.org/certs/staging/letsencrypt-stg-root-x2.pem -o letsencrypt-stg-root-x2.pem

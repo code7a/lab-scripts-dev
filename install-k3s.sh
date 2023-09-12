@@ -8,10 +8,11 @@ service k3s restart
 #get illumio-values.yaml
 pce="$(echo $(hostname) | cut -d. -f1).snc.$(echo $(hostname) | cut -d. -f2-4).$(echo $(hostname) | cut -d. -f6-8)"
 curl $pce/illumio-values.yaml -o illumio-values.yaml
-curl $pce/fullchain.pem -o /fullchain.crt
+curl $pce/chain.pem -o /chain.crt
+cat /chain.crt >> /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 #helm install
 kubectl create ns illumio-system
-kubectl --namespace illumio-system create configmap root-ca-config --from-file=/fullchain.crt
+kubectl --namespace illumio-system create configmap root-ca-config --from-file=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system
 #create nginx deployment
 kubectl create deployment nginx-alpha --image=nginx
