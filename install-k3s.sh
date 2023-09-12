@@ -12,7 +12,7 @@ curl $pce/chain.pem -o /chain.crt
 cat /chain.crt >> /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
 #helm install
 kubectl create ns illumio-system
-kubectl --namespace illumio-system create configmap root-ca-config --from-file=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+kubectl --namespace illumio-system create configmap root-ca-config --from-file=/chain.crt
 helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system
 #create nginx deployment
 kubectl create deployment nginx-alpha --image=nginx
