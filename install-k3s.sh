@@ -18,9 +18,11 @@ if [[ $(hostname) != *"dev"* ]]; then
 else
     cat /etc/pki/ca-trust/source/anchors/letsencrypt-stg-root-x1.pem >> /cert.crt
 fi
+cp /cert.crt /etc/pki/ca-trust/source/anchors/
+update-ca-trust enable && update-ca-trust extract
 #helm install
 kubectl create ns illumio-system
-kubectl --namespace illumio-system create configmap root-ca-config --from-file=/chain.crt
+kubectl --namespace illumio-system create configmap root-ca-config --from-file=/etc/pki/ca-trust/source/anchors/chain.crt
 helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system
 #create nginx deployment
 kubectl create deployment nginx-alpha --image=nginx
