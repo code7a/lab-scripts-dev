@@ -9,9 +9,15 @@ service k3s restart
 pce="$(echo $(hostname) | cut -d. -f1).snc.$(echo $(hostname) | cut -d. -f2-4).$(echo $(hostname) | cut -d. -f6-8)"
 curl $pce/illumio-values.yaml -o illumio-values.yaml
 #append chain to ca bundle
+curl $pce/cert.pem -o /cert.crt
 curl $pce/chain.pem -o /chain.crt
-cp /chain.crt /etc/pki/ca-trust/source/anchors/
-update-ca-trust enable && update-ca-trust extract
+curl $pce/fullchain.pem -o /fullchain.crt
+sed '/-----END CERTIFICATE-----/q' /chain.crt >> /cert.crt
+if [[ \$(hostname) != *"dev"* ]]; then
+    cat /etc/pki/ca-trust/source/anchors/isrgrootx1.pem >> /cert.crt
+else
+    cat /etc/pki/ca-trust/source/anchors/letsencrypt-stg-root-x1.pem >> /cert.crt
+fi
 #helm install
 kubectl create ns illumio-system
 kubectl --namespace illumio-system create configmap root-ca-config --from-file=/chain.crt
