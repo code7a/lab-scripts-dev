@@ -13,7 +13,7 @@ curl $pce/cert.pem -o /cert.crt
 curl $pce/chain.pem -o /chain.crt
 curl $pce/fullchain.pem -o /fullchain.crt
 sed '/-----END CERTIFICATE-----/q' /chain.crt >> /cert.crt
-if [[ \$(hostname) != *"dev"* ]]; then
+if [[ $(hostname) != *"dev"* ]]; then
     cat /etc/pki/ca-trust/source/anchors/isrgrootx1.pem >> /cert.crt
 else
     cat /etc/pki/ca-trust/source/anchors/letsencrypt-stg-root-x1.pem >> /cert.crt
