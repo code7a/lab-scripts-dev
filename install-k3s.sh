@@ -9,7 +9,7 @@ service k3s restart
 pce="$(echo $(hostname) | cut -d. -f1).snc.$(echo $(hostname) | cut -d. -f2-4).$(echo $(hostname) | cut -d. -f6-8)"
 curl $pce/illumio-values.yaml -o illumio-values.yaml
 curl $pce/chain.pem -o /chain.crt
-cat /chain.crt >> /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+cat /chain.crt >> /etc/pki/tls/certs/ca-bundle.crt
 #helm install
 kubectl create ns illumio-system
 kubectl --namespace illumio-system create configmap root-ca-config --from-file=/chain.crt
