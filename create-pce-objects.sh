@@ -78,3 +78,9 @@ for traffic_collector_href in "${traffic_collector_hrefs[@]}"; do
 done
 #enable label_based_network_detection
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/optional_features -X PUT -H 'Content-Type: application/json' --data-raw '[{"name": "label_based_network_detection","enabled": true}]'
+#update password policy - 30 minutes session timeout
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/authentication_settings/password_policy -X PUT -H 'content-type: application/json' --data-raw '{"session_timeout_minutes":10}'
+#enable syslog events
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/settings/syslog/destinations -X POST -H 'content-type: application/json' --data-raw '{"pce_scope":["'$(hostname)'"],"type":"local_syslog","description":"Local","audit_event_logger":{"configuration_event_included":true,"system_event_included":true,"min_severity":"informational"},"node_status_logger":{"node_status_included":true},"traffic_event_logger":{"traffic_flow_allowed_event_included":true,"traffic_flow_potentially_blocked_event_included":true,"traffic_flow_blocked_event_included":true}}'
+#create flex label, key os
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/label_dimensions -X POST -H 'content-type: application/json' --data-raw '{"key":"os","display_name":"OS","display_info":{"background_color":"#818286","icon":"","foreground_color":"#ffffff","initial":"O","display_name_plural":"O","sort_ordinal":6000000}}'
