@@ -84,3 +84,7 @@ curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/authentica
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/settings/syslog/destinations -X POST -H 'content-type: application/json' --data-raw '{"pce_scope":["'$(hostname)'"],"type":"local_syslog","description":"Local","audit_event_logger":{"configuration_event_included":true,"system_event_included":true,"min_severity":"informational"},"node_status_logger":{"node_status_included":true},"traffic_event_logger":{"traffic_flow_allowed_event_included":true,"traffic_flow_potentially_blocked_event_included":true,"traffic_flow_blocked_event_included":true}}'
 #create flex label, key os
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/label_dimensions -X POST -H 'content-type: application/json' --data-raw '{"key":"os","display_name":"OS","display_info":{"background_color":"#818286","icon":"","foreground_color":"#ffffff","initial":"O","display_name_plural":"O","sort_ordinal":6000000}}'
+#create linux os label
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"os","value":"O-LINUX"}'
+#create windows os label
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"os","value":"O-WINDOWS"}'
