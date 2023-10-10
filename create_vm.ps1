@@ -8,7 +8,7 @@ if($hostname_prefix -eq "default"){$vm_hostname="alfa-$(Get-Date -Format "yyMMdd
 else {$vm_hostname="$hostname_prefix.$app.$domain"}
 Write-Host "$vm_hostname"
 Write-Host "Launching VM..."
-$vm=New-VM -Template $vm_template_obj -Name $vm_hostname -Location (Get-Folder -Id $vm_location.Id) -VMHost (Get-VMHost -State Connected | Get-Random) -Datastore (Get-Datastore *support* | Get-Random)
+$vm=New-VM -Template $vm_template_obj -Name $vm_hostname -Location (Get-Folder -Id $vm_location.Id) -VMHost (Get-VMHost -State Connected | Where-Object {$_.Name -notlike "10.14.0.16" -and $_.Name -notlike "10.14.0.12" -and $_.Name -notlike "10.14.0.11" -and $_.Name -notlike "10.14.0.208" -and $_.Name -notlike "10.14.0.18"} | Get-Random) -Datastore (Get-Datastore *support* | Get-Random)
 Write-Host "VM created."
 Start-Sleep 20
 Set-VM $vm -MemoryGB $vm_memory_gb -NumCpu $vm_cores -Confirm:$false
