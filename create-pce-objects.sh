@@ -35,8 +35,8 @@ curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/opt
 dev_label_href=$(curl -u $auth_username:$session_token "https://$(hostname):8443/api/v2/orgs/1/labels?key=env&value=Development" | jq -r .[].href)
 #get k3s label href
 k3s_label_href=$(curl -u $auth_username:$session_token "https://$(hostname):8443/api/v2/orgs/1/labels?key=app&value=A-K3S" | jq -r .[].href)
-#create containter cluster
-container_clusters_response=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters -X POST -H 'content-type: application/json' --data-raw '{"name":"k3s","description":""}')
+#create latest containter cluster
+container_clusters_response=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters -X POST -H 'content-type: application/json' --data-raw '{"name":"k3s-latest","description":""}')
 pce_container_clusters_cluster_id=$(echo $container_clusters_response | jq -r .href | cut -d/ -f5)
 pce_container_clusters_cluster_token=$(echo $container_clusters_response | jq -r .container_cluster_token)
 #create container pairing profile
@@ -48,8 +48,37 @@ pce_container_clusters_activation_code=$(echo $pairing_key_response | jq -r .act
 echo y|cp /etc/letsencrypt/live/$(hostname)/cert.pem /usr/share/nginx/html/
 echo y|cp /etc/letsencrypt/live/$(hostname)/chain.pem /usr/share/nginx/html/
 echo y|cp /etc/letsencrypt/live/$(hostname)/fullchain.pem /usr/share/nginx/html/
-#create containter cluster illumio-values.yaml
-cat << EOF > /usr/share/nginx/html/illumio-values.yaml
+#create containter cluster illumio-values-latest.yaml
+cat << EOF > /usr/share/nginx/html/illumio-values-latest.yaml
+pce_url: $(hostname):8443
+cluster_id: $pce_container_clusters_cluster_id
+cluster_token: $pce_container_clusters_cluster_token
+cluster_code: $pce_container_clusters_activation_code
+containerRuntime: k3s_containerd
+containerManager: kubernetes
+ignore_cert: true
+extraVolumeMounts:
+  - name: root-ca
+    mountPath: /etc/pki/tls/ilo_certs/
+    readOnly: false
+extraVolumes:
+  - name: root-ca
+    configMap:
+      name: root-ca-config
+EOF
+#get container default workload profile id
+container_workload_profiles=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles)
+container_workload_profiles_default_id=$(echo $container_workload_profiles | jq -r .[].href | cut -d/ -f7)
+#get container label href
+role_label_href=$(curl -u $auth_username:$session_token "https://$(hostname):8443/api/v2/orgs/1/labels?key=role&value=R-CONTAINER" | jq -r .[].href)
+#update container workload default profile
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles/$container_workload_profiles_default_id -X PUT -H 'content-type: application/json' --data-raw '{"managed":true,"labels":[{"key":"env","assignment":{"href":"'$dev_label_href'"}},{"key":"role","assignment":{"href":"'$role_label_href'"}}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary"}'
+#create 4.3.0 containter cluster
+container_clusters_response=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/container_clusters -X POST -H 'content-type: application/json' --data-raw '{"name":"k3s-4.3.0","description":""}')
+pce_container_clusters_cluster_id=$(echo $container_clusters_response | jq -r .href | cut -d/ -f5)
+pce_container_clusters_cluster_token=$(echo $container_clusters_response | jq -r .container_cluster_token)
+#create containter cluster illumio-values-4.3.0.yaml
+cat << EOF > /usr/share/nginx/html/illumio-values-4.3.0.yaml
 pce_url: $(hostname):8443
 cluster_id: $pce_container_clusters_cluster_id
 cluster_token: $pce_container_clusters_cluster_token
@@ -93,3 +122,7 @@ curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/lab
 #core services detection
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/settings/core_services -X PUT -H 'content-type: application/json' --data-raw '{"enabled":true}'
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/settings/core_services -X PUT -H 'content-type: application/json' --data-raw '{"scanner_enabled":true}'
+#create service
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy/draft/services -X POST -H 'content-type: application/json' --data-raw '{"name":"S-taskhostw.exe","description":"","windows_egress_services":[{"process_name":"C:\\Windows\\System32\\taskhostw.exe"}]}'
+services_response_href=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy/draft/services | jq -r '.[] | select(.name=="S-taskhostw.exe") | .href')
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy -X POST -H 'content-type: application/json' --data-raw '{"update_description":"","change_subset":{"services":[{"href":"'$services_response_href'"}]}}'
