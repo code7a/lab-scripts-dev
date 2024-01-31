@@ -57,6 +57,8 @@ cluster_code: $pce_container_clusters_activation_code
 containerRuntime: k3s_containerd
 containerManager: kubernetes
 ignore_cert: true
+clusterMode: clas
+imagePullPolicy: Always
 extraVolumeMounts:
   - name: root-ca
     mountPath: /etc/pki/tls/ilo_certs/
@@ -126,3 +128,7 @@ curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/set
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy/draft/services -X POST -H 'content-type: application/json' --data-raw '{"name":"S-taskhostw.exe","description":"","windows_egress_services":[{"process_name":"C:\\Windows\\System32\\taskhostw.exe"}]}'
 services_response_href=$(curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy/draft/services | jq -r '.[] | select(.name=="S-taskhostw.exe") | .href')
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy -X POST -H 'content-type: application/json' --data-raw '{"update_description":"","change_subset":{"services":[{"href":"'$services_response_href'"}]}}'
+#enable rule hit count on VEN on all scopes
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy/draft/firewall_settings -X PUT -H 'Content-Type: application/json' --data-raw '{"rule_hit_count_enabled_scopes":[[]]}'
+#enable rule hit count report
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/report_templates/rule_hit_count_report -X PUT -H 'Content-Type: application/json' --data-raw '{"enabled": true}'
