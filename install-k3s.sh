@@ -26,7 +26,7 @@ update-ca-trust enable && update-ca-trust extract
 #helm install
 kubectl create ns illumio-system
 kubectl --namespace illumio-system create configmap root-ca-config --from-file=/etc/pki/ca-trust/source/anchors/cert.crt
-if [[ "version" == "4.3.0" ]]; then
+if [[ "$version" == "4.3.0" ]]; then
  helm install illumio -f illumio-values-$version.yaml oci://quay.io/illumio/illumio --namespace illumio-system --version 4.3.0
 else
  helm install illumio -f illumio-values-$version.yaml oci://quay.io/illumio/illumio --namespace illumio-system
