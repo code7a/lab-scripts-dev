@@ -130,5 +130,7 @@ services_response_href=$(curl -u $auth_username:$session_token https://$(hostnam
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy -X POST -H 'content-type: application/json' --data-raw '{"update_description":"","change_subset":{"services":[{"href":"'$services_response_href'"}]}}'
 #enable rule hit count on VEN on all scopes
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy/draft/firewall_settings -X PUT -H 'Content-Type: application/json' --data-raw '{"rule_hit_count_enabled_scopes":[[]]}'
+#provison
+curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/sec_policy -X POST -H 'content-type: application/json' --data-raw '{"update_description":"","change_subset":{"firewall_settings":[{"href":"/orgs/1/sec_policy/draft/firewall_settings"}]}}'
 #enable rule hit count report
 curl -u $auth_username:$session_token https://$(hostname):8443/api/v2/orgs/1/report_templates/rule_hit_count_report -X PUT -H 'Content-Type: application/json' --data-raw '{"enabled": true}'
