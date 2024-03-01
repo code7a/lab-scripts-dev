@@ -1,7 +1,15 @@
 #get-pce-binaries.sh
 yum install -y wget
 cd /
-if [[ $pce_version == "23.4.2" ]]; then
+if [[ $pce_version == "23.5.10" ]]; then
+    wget --no-check-certificate --timestamping https://$repo/23.5/GA%20Releases/23.5.10/pce/pkgs/illumio-pce-23.5.10-107.el9.x86_64.rpm
+    wget --no-check-certificate --timestamping https://$repo/23.5/GA%20Releases/23.5.10/pce/pkgs/UI/illumio-pce-ui-23.5.10.UI1-117.x86_64.rpm
+    wget --no-check-certificate --timestamping https://$repo_compatibility/342/illumio-release-compatibility-53-342.tar.bz2
+    wget --no-check-certificate --timestamping https://$repo/23.2/GA%20Releases/23.2.22/ven/bundle/illumio-ven-bundle-23.2.22-290.tar.bz2
+    wget --no-check-certificate --timestamping https://$repo/23.2/GA%20Releases/23.2.10/ven/bundle/illumio-ven-bundle-23.2.10-205.tar.bz2
+    wget --no-check-certificate --timestamping https://$repo/22.5/GA%20Releases/22.5.22/ven/bundle/illumio-ven-bundle-22.5.22-9806.tar.bz2
+    wget --no-check-certificate --timestamping https://$repo/21.5/GA%20Releases/21.5.32/ven/bundle/illumio-ven-bundle-21.5.32-8533.tar.bz2
+elif [[ $pce_version == "23.4.2" ]]; then
     wget --no-check-certificate --timestamping https://$repo/23.4/GA%20Releases/23.4.2/pce/pkgs/illumio-pce-23.4.2-4.c8.x86_64.rpm
     wget --no-check-certificate --timestamping https://$repo/23.4/GA%20Releases/23.4.2/pce/pkgs/UI/illumio-pce-ui-23.4.2.UI1-1.x86_64.rpm
     wget --no-check-certificate --timestamping https://$repo_compatibility/337/illumio-release-compatibility-51-337.tar.bz2
