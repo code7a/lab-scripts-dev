@@ -1,6 +1,5 @@
 #!/bin/bash
-#install k3s - ubuntu
-apt update -y
+#install k3s
 curl -sfL https://get.k3s.io | sh -
 echo 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml' > .bash_profile
 source .bash_profile
@@ -17,7 +16,7 @@ curl -O https://raw.githubusercontent.com/code7a/lab-scripts-dev/main/sample-app
 kubectl apply --namespace yelb -f yelb-with-annotations.yml
 #illumio annotations
 #haproxy
-apt install haproxy -y
+yum install haproxy -y
 echo "frontend emojivote_frontend
  bind *:81
  mode tcp
