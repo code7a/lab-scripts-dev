@@ -1,17 +1,14 @@
 #!/bin/bash
 #install k3s
-curl -sfL https://get.k3s.io | sh -
-echo 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml' > .bash_profile
-source .bash_profile
-echo 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml' > /etc/profile.d/kubeconfig.sh
+curl -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
+#install helm
 curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 service k3s restart
 #emoji vote sample app
-yum install git -y
 git clone https://github.com/digitalocean/kubernetes-sample-apps.git
 kubectl apply -k kubernetes-sample-apps/emojivoto-example/kustomize
-#haproxy
-yum install haproxy -y
+#install and configure haproxy
+apt install haproxy -y
 echo "frontend front
  bind *:81
  mode tcp
