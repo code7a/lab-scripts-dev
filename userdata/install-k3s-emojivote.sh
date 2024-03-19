@@ -10,7 +10,7 @@ kubectl apply -k kubernetes-sample-apps/emojivoto-example/kustomize
 #install and configure haproxy
 apt install haproxy -y
 echo "frontend front
- bind *:81
+ bind *:80
  mode tcp
  default_backend back
 backend back
