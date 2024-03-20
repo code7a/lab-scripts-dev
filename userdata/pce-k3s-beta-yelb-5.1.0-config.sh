@@ -24,29 +24,34 @@ session_token=$(echo $login_response | jq -r '.session_token')
 labels_node_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-NODE"}' | jq -r '.href')
 #create container role label
 labels_container_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-CONTAINER"}' | jq -r '.href')
+#create redis role label
+labels_redis_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-REDIS"}' | jq -r '.href')
+#create app role label
+labels_app_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-APP"}' | jq -r '.href')
+#create db role label
+labels_db_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-DB"}' | jq -r '.href')
 #create web role label
 labels_web_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-WEB"}' | jq -r '.href')
-#create list role label
-labels_list_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-LIST"}' | jq -r '.href')
-#create vote role label
-labels_vote_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-VOTE"}' | jq -r '.href')
-#create bot role label
-labels_bot_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-BOT"}' | jq -r '.href')
 #create k3s app label
 labels_k3s_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-K3S"}' | jq -r '.href')
-#create emojivote app label
-labels_emojivote_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-EMOJIVOTE"}' | jq -r '.href')
+#create yerb app label
+labels_yelb_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-YELB"}' | jq -r '.href')
 #get prod label href
 labels_prod_href=$(curl -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=env&value=Production" | jq -r .[].href)
 #get amazon label href
 labels_amazon_href=$(curl -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=loc&value=Amazon" | jq -r .[].href)
 #create latest containter cluster
-container_clusters_response=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/container_clusters -X POST -H 'content-type: application/json' --data-raw '{"name":"k3s-alfa","description":""}')
+container_clusters_response=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/container_clusters -X POST -H 'content-type: application/json' --data-raw '{"name":"k3s-beta","description":""}')
 pce_container_clusters_cluster_id=$(echo $container_clusters_response | jq -r .href | cut -d/ -f5)
 pce_container_clusters_cluster_token=$(echo $container_clusters_response | jq -r .container_cluster_token)
 #create container pairing profile
 pairing_profiles_response=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/pairing_profiles -X POST -H 'content-type: application/json' --data-raw '{"name":"pp-container_nodes","description":"","labels":[{"href":"'$labels_node_href'"},{"href":"'$labels_k3s_href'"},{"href":"'$labels_prod_href'"},{"href":"'$labels_amazon_href'"}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary","allowed_uses_per_key":"unlimited","agent_software_release":null,"key_lifespan":"unlimited","app_label_lock":true,"env_label_lock":true,"loc_label_lock":true,"role_label_lock":true,"enforcement_mode_lock":true,"visibility_level_lock":true,"enabled":true,"ven_type":"server"}')
 pairing_profiles_response_href=$(echo $pairing_profiles_response | jq -r .href)
+#if error, already exists, get href
+pairing_profiles_response_message=$(echo $pairing_profiles_response | jq -r .[].message)
+if [ "$pairing_profiles_response_message" == "Name must be unique" ]; then
+    pairing_profiles_response_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/pairing_profiles?name=pp-container_nodes | jq -r .[].href)
+fi
 pairing_key_response=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2$pairing_profiles_response_href/pairing_key -X POST -H 'content-type: application/json' --data-raw '{}')
 pce_container_clusters_activation_code=$(echo $pairing_key_response | jq -r .activation_code)
 #get container default workload profile id
@@ -63,6 +68,7 @@ cluster_code: $pce_container_clusters_activation_code
 containerRuntime: k3s_containerd
 containerManager: kubernetes
 ignore_cert: true
+clusterMode: clas
 extraVolumeMounts:
   - name: root-ca
     mountPath: /etc/pki/tls/ilo_certs/
@@ -76,10 +82,4 @@ EOF
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 kubectl create ns illumio-system
 kubectl --namespace illumio-system create configmap root-ca-config --from-file=/usr/local/share/ca-certificates/server.crt
-helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system --version 4.3.0
-#get emoji vote workload profile
-container_workload_profiles=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles)
-#get emoji vote workload profile id
-container_workload_profiles_emojivote=$(echo $container_workload_profiles|jq -r '.[]|select(.namespace=="emojivoto") | .href')
-#update container workload default profile
-curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2$container_workload_profiles_emojivote -X PUT -H 'content-type: application/json' --data-raw '{"managed":true,"labels":[{"key":"env","assignment":{"href":"'$labels_prod_href'"}},{"key":"role","assignment":{"href":"'$labels_container_href'"}},{"key":"app","assignment":{"href":"'$labels_emojivote_href'"}},{"key":"loc","assignment":{"href":"'$labels_amazon_href'"}}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary","name":null,"description":""}'
+helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system --version 5.1.0
