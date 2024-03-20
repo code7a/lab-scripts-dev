@@ -77,6 +77,7 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 kubectl create ns illumio-system
 kubectl --namespace illumio-system create configmap root-ca-config --from-file=/usr/local/share/ca-certificates/server.crt
 helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system --version 4.3.0
+sleep 60
 #get emoji vote workload profile
 container_workload_profiles=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles)
 #get emoji vote workload profile id
