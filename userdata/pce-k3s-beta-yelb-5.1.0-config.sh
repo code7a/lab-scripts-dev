@@ -24,23 +24,30 @@ session_token=$(echo $login_response | jq -r '.session_token')
 labels_node_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-NODE"}' | jq -r '.href')
 #create container role label
 labels_container_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-CONTAINER"}' | jq -r '.href')
+echo $? | grep 0 || labels_container_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-CONTAINER" | jq -r .[].href)
 #create redis role label
 labels_redis_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-REDIS"}' | jq -r '.href')
+echo $? | grep 0 || labels_redis_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-REDIS" | jq -r .[].href)
 #create app role label
 labels_app_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-APP"}' | jq -r '.href')
+echo $? | grep 0 || labels_app_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-APP" | jq -r .[].href)
 #create db role label
 labels_db_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-DB"}' | jq -r '.href')
+echo $? | grep 0 || labels_db_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-DB" | jq -r .[].href)
 #create web role label
 labels_web_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-WEB"}' | jq -r '.href')
+echo $? | grep 0 || labels_web_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-WEB" | jq -r .[].href)
 #create k3s app label
 labels_k3s_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-K3S"}' | jq -r '.href')
+echo $? | grep 0 || labels_k3s_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=app&value=A-K3S" | jq -r .[].href)
 #create yerb app label
 labels_yelb_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-YELB"}' | jq -r '.href')
+echo $? | grep 0 || labels_yelb_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=app&value=A-YELB" | jq -r .[].href)
 #get prod label href
 labels_prod_href=$(curl -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=env&value=Production" | jq -r .[].href)
 #get amazon label href
 labels_amazon_href=$(curl -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=loc&value=Amazon" | jq -r .[].href)
-#create latest containter cluster
+#create containter cluster
 container_clusters_response=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/container_clusters -X POST -H 'content-type: application/json' --data-raw '{"name":"k3s-beta","description":""}')
 pce_container_clusters_cluster_id=$(echo $container_clusters_response | jq -r .href | cut -d/ -f5)
 pce_container_clusters_cluster_token=$(echo $container_clusters_response | jq -r .container_cluster_token)
