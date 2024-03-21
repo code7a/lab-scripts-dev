@@ -30,9 +30,10 @@ while true; do
     http_response_code=$(curl -k -s -o /dev/null -I -w "%{http_code}" https://$PublicDnsName:8443/login)
     echo $http_response_code
     if [ "$http_response_code" == "200" ];then
+        sleep 60
         break
     fi
-    sleep 30
+    sleep 60
 done
 #create pce objects
 #auth

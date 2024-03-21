@@ -1,8 +1,4 @@
 #!/bin/bash
-#get pce cert
-curl -k -O http://$PublicDnsName:80/server.crt
-cp server.crt /usr/local/share/ca-certificates/
-update-ca-certificates
 #install k3s
 curl -k -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
 #install helm
@@ -23,16 +19,20 @@ backend back
 service haproxy restart
 #shutdown in 8 hours
 shutdown +480
+#get pce cert
+curl -k -O http://$PublicDnsName:80/server.crt
+cp server.crt /usr/local/share/ca-certificates/
+update-ca-certificates
 #wait till pce is up
 while true; do
   http_response_code=$(curl -k -s -o /dev/null -I -w "%{http_code}" https://$PublicDnsName:8443/login)
   echo $http_response_code
   if [ "$http_response_code" == "200" ];then
+    sleep 60
     break
   fi
-  sleep 300
+  sleep 60
 done
-update-ca-certificates
 #create pce objects
 #auth
 basic_auth_token=$(echo -n "$pce_admin_username_email_address:$pce_admin_password"|base64)
