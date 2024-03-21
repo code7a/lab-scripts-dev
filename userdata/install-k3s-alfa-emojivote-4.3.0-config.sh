@@ -1,4 +1,8 @@
 #!/bin/bash
+#get pce cert
+curl -k -O http://$PublicDnsName:80/server.crt
+cp server.crt /usr/local/share/ca-certificates/
+update-ca-certificates
 #install k3s
 curl -k -sfL https://get.k3s.io | sh -s - --write-kubeconfig-mode 644
 #install helm
@@ -19,10 +23,6 @@ backend back
 service haproxy restart
 #shutdown in 8 hours
 shutdown +480
-#get pce cert
-curl -k -O http://$PublicDnsName:80/server.crt
-cp server.crt /usr/local/share/ca-certificates/
-update-ca-certificates
 #wait till pce is up
 while true; do
   http_response_code=$(curl -k -s -o /dev/null -I -w "%{http_code}" https://$PublicDnsName:8443/login)
@@ -32,10 +32,11 @@ while true; do
   fi
   sleep 300
 done
+update-ca-certificates
 #create pce objects
 #auth
 basic_auth_token=$(echo -n "$pce_admin_username_email_address:$pce_admin_password"|base64)
-auth_token=$(curl -k -X POST -H "Authorization: Basic $basic_auth_token" https://$PublicDnsName:8443/api/v2/login_users/authenticate?pce_fqdn=$PublicDnsName | jq -r '.auth_token')
+auth_token=$(curl -v -k -X POST -H "Authorization: Basic $basic_auth_token" https://$PublicDnsName:8443/api/v2/login_users/authenticate?pce_fqdn=$PublicDnsName | jq -r '.auth_token')
 login_response=$(curl -k -H "Authorization: Token token=$auth_token" https://$PublicDnsName:8443/api/v2/users/login)
 auth_username=$(echo $login_response | jq -r '.auth_username')
 session_token=$(echo $login_response | jq -r '.session_token')
