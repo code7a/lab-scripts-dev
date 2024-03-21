@@ -4,18 +4,22 @@ curl -O http://$PublicDnsName:80/server.crt
 cp server.crt /usr/local/share/ca-certificates/
 update-ca-certificates
 #wait till pce is up
+echo $PublicDnsName
 while true; do
-    http_response_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://$PublicDnsName:8443/login)
-    echo $http_response_code
-    if [ "$http_response_code" == "200" ];then
-        break
-    fi
-    sleep 300
+  curl -v https://$PublicDnsName:8443/login
+  http_response_code=$(curl -v -o /dev/null -I -w "%{http_code}" https://$PublicDnsName:8443/login)
+  echo $http_response_code
+  if [ "$http_response_code" == "200" ];then
+    break
+  fi
+  sleep 60
 done
 #create pce objects
 #auth
+curl -v https://$PublicDnsName:8443/login
 basic_auth_token=$(echo -n "$pce_admin_username_email_address:$pce_admin_password"|base64)
-auth_token=$(curl -X POST -H "Authorization: Basic $basic_auth_token" "https://$PublicDnsName:8443/api/v2/login_users/authenticate?pce_fqdn=$PublicDnsName" | jq -r '.auth_token')
+curl -v -X POST -H "Authorization: Basic $basic_auth_token" https://$PublicDnsName:8443/api/v2/login_users/authenticate?pce_fqdn=$PublicDnsName
+auth_token=$(curl -v -X POST -H "Authorization: Basic $basic_auth_token" "https://$PublicDnsName:8443/api/v2/login_users/authenticate?pce_fqdn=$PublicDnsName" | jq -r '.auth_token')
 login_response=$(curl -H "Authorization: Token token=$auth_token" https://$PublicDnsName:8443/api/v2/users/login)
 auth_username=$(echo $login_response | jq -r '.auth_username')
 session_token=$(echo $login_response | jq -r '.session_token')
