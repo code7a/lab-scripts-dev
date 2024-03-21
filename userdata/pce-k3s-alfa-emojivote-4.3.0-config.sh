@@ -10,7 +10,7 @@ while true; do
     if [ "$http_response_code" == "200" ];then
         break
     fi
-    sleep 120
+    sleep 180
 done
 #create pce objects
 #auth
