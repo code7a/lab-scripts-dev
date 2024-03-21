@@ -66,7 +66,7 @@ pce_container_clusters_activation_code=$(echo $pairing_key_response | jq -r .act
 container_workload_profiles=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles)
 container_workload_profiles_default_id=$(echo $container_workload_profiles | jq -r .[].href | cut -d/ -f7)
 #update container workload default profile
-curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles/$container_workload_profiles_default_id -X PUT -H 'content-type: application/json' --data-raw '{"managed":true,"labels":[{"key":"env","assignment":{"href":"'$labels_prod_href'"}},{"key":"role","assignment":{"href":"'$labels_container_href'"}}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary"}'
+curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/container_clusters/$pce_container_clusters_cluster_id/container_workload_profiles/$container_workload_profiles_default_id -X PUT -H 'content-type: application/json' --data-raw '{"managed":true,"labels":[],"enforcement_mode":"visibility_only","visibility_level":"flow_summary"}'
 #create containter cluster illumio-values.yaml
 cat << EOF > illumio-values.yaml
 pce_url: $PublicDnsName:8443
