@@ -22,6 +22,7 @@ session_token=$(echo $login_response | jq -r '.session_token')
 #create labels
 #create node role label
 labels_node_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-NODE"}' | jq -r '.href')
+echo $? | grep 0 || labels_node_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-NODE" | jq -r .[].href)
 #create container role label
 labels_container_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-CONTAINER"}' | jq -r '.href')
 echo $? | grep 0 || labels_container_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-CONTAINER" | jq -r .[].href)
@@ -40,7 +41,7 @@ echo $? | grep 0 || labels_web_href=$(curl -s -u $auth_username:$session_token "
 #create k3s app label
 labels_k3s_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-K3S"}' | jq -r '.href')
 echo $? | grep 0 || labels_k3s_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=app&value=A-K3S" | jq -r .[].href)
-#create yerb app label
+#create yelb app label
 labels_yelb_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-YELB"}' | jq -r '.href')
 echo $? | grep 0 || labels_yelb_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=app&value=A-YELB" | jq -r .[].href)
 #get prod label href

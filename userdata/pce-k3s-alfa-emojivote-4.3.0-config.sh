@@ -22,20 +22,28 @@ session_token=$(echo $login_response | jq -r '.session_token')
 #create labels
 #create node role label
 labels_node_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-NODE"}' | jq -r '.href')
+echo $? | grep 0 || labels_node_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-NODE" | jq -r .[].href)
 #create container role label
 labels_container_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-CONTAINER"}' | jq -r '.href')
+echo $? | grep 0 || labels_container_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-CONTAINER" | jq -r .[].href)
 #create web role label
 labels_web_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-WEB"}' | jq -r '.href')
+echo $? | grep 0 || labels_web_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-WEB" | jq -r .[].href)
 #create list role label
 labels_list_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-LIST"}' | jq -r '.href')
+echo $? | grep 0 || labels_list_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-LIST" | jq -r .[].href)
 #create vote role label
 labels_vote_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-VOTE"}' | jq -r '.href')
+echo $? | grep 0 || labels_vote_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-VOTE" | jq -r .[].href)
 #create bot role label
 labels_bot_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"role","value":"R-BOT"}' | jq -r '.href')
+echo $? | grep 0 || labels_bot_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=role&value=R-BOT" | jq -r .[].href)
 #create k3s app label
 labels_k3s_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-K3S"}' | jq -r '.href')
+echo $? | grep 0 || labels_k3s_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=app&value=A-K3S" | jq -r .[].href)
 #create emojivote app label
 labels_emojivote_href=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-EMOJIVOTE"}' | jq -r '.href')
+echo $? | grep 0 || labels_emojivote_href=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=app&value=A-EMOJIVOTE" | jq -r .[].href)
 #get prod label href
 labels_prod_href=$(curl -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=env&value=Production" | jq -r .[].href)
 #get amazon label href
@@ -46,6 +54,7 @@ pce_container_clusters_cluster_id=$(echo $container_clusters_response | jq -r .h
 pce_container_clusters_cluster_token=$(echo $container_clusters_response | jq -r .container_cluster_token)
 #create container pairing profile
 pairing_profiles_response=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/pairing_profiles -X POST -H 'content-type: application/json' --data-raw '{"name":"pp-container_nodes","description":"","labels":[{"href":"'$labels_node_href'"},{"href":"'$labels_k3s_href'"},{"href":"'$labels_prod_href'"},{"href":"'$labels_amazon_href'"}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary","allowed_uses_per_key":"unlimited","agent_software_release":null,"key_lifespan":"unlimited","app_label_lock":true,"env_label_lock":true,"loc_label_lock":true,"role_label_lock":true,"enforcement_mode_lock":true,"visibility_level_lock":true,"enabled":true,"ven_type":"server"}')
+echo $? | grep 0 || pairing_profiles_response=$(curl -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/pairing_profiles?name=pp-container_nodes" | jq -r .[].href)
 pairing_profiles_response_href=$(echo $pairing_profiles_response | jq -r .href)
 pairing_key_response=$(curl -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2$pairing_profiles_response_href/pairing_key -X POST -H 'content-type: application/json' --data-raw '{}')
 pce_container_clusters_activation_code=$(echo $pairing_key_response | jq -r .activation_code)
