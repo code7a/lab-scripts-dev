@@ -30,7 +30,7 @@ while true; do
     http_response_code=$(curl -k -s -o /dev/null -I -w "%{http_code}" https://$PublicDnsName:8443/login)
     echo $http_response_code
     if [ "$http_response_code" == "200" ];then
-        sleep 120
+        sleep 180
         break
     fi
     sleep 60

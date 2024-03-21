@@ -36,12 +36,7 @@ done
 #create pce objects
 #auth
 basic_auth_token=$(echo -n "$pce_admin_username_email_address:$pce_admin_password"|base64)
-while true; do
-    auth_token=$(curl -v -k -X POST -H "Authorization: Basic $basic_auth_token" https://$PublicDnsName:8443/api/v2/login_users/authenticate?pce_fqdn=$PublicDnsName | jq -r '.auth_token')
-    if [[ $? -eq 0 ]]; then break; fi
-    sleep 30
-done
-auth_token=$(curl -v -k -X POST -H "Authorization: Basic $basic_auth_token" https://$PublicDnsName:8443/api/v2/login_users/authenticate?pce_fqdn=$PublicDnsName | jq -r '.auth_token')
+auth_token=$(curl -k -X POST -H "Authorization: Basic $basic_auth_token" https://$PublicDnsName:8443/api/v2/login_users/authenticate?pce_fqdn=$PublicDnsName | jq -r '.auth_token')
 login_response=$(curl -k -H "Authorization: Token token=$auth_token" https://$PublicDnsName:8443/api/v2/users/login)
 auth_username=$(echo $login_response | jq -r '.auth_username')
 session_token=$(echo $login_response | jq -r '.session_token')
