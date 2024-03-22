@@ -77,6 +77,11 @@ pce_container_clusters_cluster_token=$(echo $container_clusters_response | jq -r
 pairing_profiles_response=$(curl -k -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/pairing_profiles -X POST -H 'content-type: application/json' --data-raw '{"name":"pp-container_nodes","description":"","labels":[{"href":"'$labels_node_href'"},{"href":"'$labels_k3s_href'"},{"href":"'$labels_prod_href'"},{"href":"'$labels_amazon_href'"}],"enforcement_mode":"visibility_only","visibility_level":"flow_summary","allowed_uses_per_key":"unlimited","agent_software_release":null,"key_lifespan":"unlimited","app_label_lock":true,"env_label_lock":true,"loc_label_lock":true,"role_label_lock":true,"enforcement_mode_lock":true,"visibility_level_lock":true,"enabled":true,"ven_type":"server"}')
 echo $? | grep 0 || pairing_profiles_response=$(curl -k -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/pairing_profiles?name=pp-container_nodes" | jq -r .[].href)
 pairing_profiles_response_href=$(echo $pairing_profiles_response | jq -r .href)
+#if error, already exists, get href
+pairing_profiles_response_message=$(echo $pairing_profiles_response | jq -r .[].message)
+if [ "$pairing_profiles_response_message" == "Name must be unique" ]; then
+    pairing_profiles_response_href=$(curl -k -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/pairing_profiles?name=pp-container_nodes | jq -r .[].href)
+fi
 pairing_key_response=$(curl -k -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2$pairing_profiles_response_href/pairing_key -X POST -H 'content-type: application/json' --data-raw '{}')
 pce_container_clusters_activation_code=$(echo $pairing_key_response | jq -r .activation_code)
 #get container default workload profile id
