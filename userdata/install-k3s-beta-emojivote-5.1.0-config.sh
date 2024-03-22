@@ -98,6 +98,7 @@ cluster_code: $pce_container_clusters_activation_code
 containerRuntime: k3s_containerd
 containerManager: kubernetes
 ignore_cert: true
+clusterMode: clas
 extraVolumeMounts:
   - name: root-ca
     mountPath: /etc/pki/tls/ilo_certs/
@@ -111,7 +112,7 @@ EOF
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 kubectl create ns illumio-system
 kubectl --namespace illumio-system create configmap root-ca-config --from-file=/usr/local/share/ca-certificates/server.crt
-helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system --version 4.3.0
+helm install illumio -f illumio-values.yaml oci://quay.io/illumio/illumio --namespace illumio-system --version 5.1.0
 sleep 60
 echo "spec:
   template:
