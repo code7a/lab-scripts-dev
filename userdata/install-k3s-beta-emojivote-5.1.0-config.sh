@@ -62,15 +62,15 @@ echo $? | grep 0 || labels_bot_href=$(curl -k -s -u $auth_username:$session_toke
 #create k3s app label
 labels_k3s_href=$(curl -k -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-K3S"}' | jq -r '.href')
 echo $? | grep 0 || labels_k3s_href=$(curl -k -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=app&value=A-K3S" | jq -r .[].href)
-#create alfa app label
-labels_emojivote_alfa_href=$(curl -k -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-EMOJIVOTE-ALFA"}' | jq -r '.href')
-echo $? | grep 0 || labels_emojivote_alfa_href=$(curl -k -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=app&value=A-EMOJIVOTE-ALFA" | jq -r .[].href)
+#create beta app label
+labels_emojivote_beta_href=$(curl -k -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/labels -H 'Content-Type: application/json' --data-raw '{"key":"app","value":"A-EMOJIVOTE-BETA"}' | jq -r '.href')
+echo $? | grep 0 || labels_emojivote_beta_href=$(curl -k -s -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=app&value=A-EMOJIVOTE-BETA" | jq -r .[].href)
 #get prod label href
 labels_prod_href=$(curl -k -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=env&value=Production" | jq -r .[].href)
 #get amazon label href
 labels_amazon_href=$(curl -k -u $auth_username:$session_token "https://$PublicDnsName:8443/api/v2/orgs/1/labels?key=loc&value=Amazon" | jq -r .[].href)
 #create containter cluster
-container_clusters_response=$(curl -k -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/container_clusters -X POST -H 'content-type: application/json' --data-raw '{"name":"k3s-alfa","description":""}')
+container_clusters_response=$(curl -k -u $auth_username:$session_token https://$PublicDnsName:8443/api/v2/orgs/1/container_clusters -X POST -H 'content-type: application/json' --data-raw '{"name":"k3s-beta","description":""}')
 pce_container_clusters_cluster_id=$(echo $container_clusters_response | jq -r .href | cut -d/ -f5)
 pce_container_clusters_cluster_token=$(echo $container_clusters_response | jq -r .container_cluster_token)
 #create container pairing profile
@@ -113,7 +113,7 @@ echo "spec:
     metadata:
       annotations:
         com.illumio.role: R-WEB
-        com.illumio.app: A-EMOJIVOTE-ALFA
+        com.illumio.app: A-EMOJIVOTE-BETA
         com.illumio.env: Production
         com.illumio.loc: Amazon" > emojivote-web-annotation.yaml
 kubectl patch deployment/web --patch-file emojivote-web-annotation.yaml -n emojivoto
@@ -122,7 +122,7 @@ echo "spec:
     metadata:
       annotations:
         com.illumio.role: R-VOTE
-        com.illumio.app: A-EMOJIVOTE-ALFA
+        com.illumio.app: A-EMOJIVOTE-BETA
         com.illumio.env: Production
         com.illumio.loc: Amazon" > emojivote-vote-annotation.yaml
 kubectl patch deployment/voting --patch-file emojivote-vote-annotation.yaml -n emojivoto
@@ -131,7 +131,7 @@ echo "spec:
     metadata:
       annotations:
         com.illumio.role: R-LIST
-        com.illumio.app: A-EMOJIVOTE-ALFA
+        com.illumio.app: A-EMOJIVOTE-BETA
         com.illumio.env: Production
         com.illumio.loc: Amazon" > emojivote-list-annotation.yaml
 kubectl patch deployment/emoji --patch-file emojivote-list-annotation.yaml -n emojivoto
@@ -140,7 +140,7 @@ echo "spec:
     metadata:
       annotations:
         com.illumio.role: R-BOT
-        com.illumio.app: A-EMOJIVOTE-ALFA
+        com.illumio.app: A-EMOJIVOTE-BETA
         com.illumio.env: Production
         com.illumio.loc: Amazon" > emojivote-list-annotation.yaml
 kubectl patch deployment/vote-bot --patch-file emojivote-list-annotation.yaml -n emojivoto
